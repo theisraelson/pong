@@ -10,8 +10,8 @@ function ball:load()
 end
 
 function ball:update(dt)
-  ball:move(dt)
   ball:collision()
+  ball:move(dt)
 end
 
 function ball:draw()
@@ -24,14 +24,31 @@ function ball:move(dt)
 end
 
 function ball:collision()
-  if ball.x < player.x + player.width then
-    ball.xVel = -ball.xVel
-    if ball.y < player.y + (player.height / 3) then
-      ball.yVel = -200
-    elseif ball.y < player.y + (player.height / 3 * 2) then
+  ball:paddleCollision(player)
+  ball:paddleCollision(enemy)
+  ball:wallCollision()
+end
+
+function ball:wallCollision()
+  if ball.y <= 0 or ball.y + ball.width >= love.graphics.getHeight() then
+    ball.yVel = -ball.yVel
+  end
+end
+
+function ball:paddleCollision(paddle)
+  if ball.x < paddle.x + paddle.width and ball.x + ball.width > paddle.x and ball.y < paddle.y + paddle.height and ball.y + ball.width > paddle.y then
+    ball:reverse()
+    if ball.y + (ball.width / 2) < paddle.y + paddle.height / 3 then
+      ball.yVel = -300
+    elseif ball.y + (ball.width / 2) < paddle.y + (paddle.height / 3) * 2 then
       ball.yVel = 0
     else
-      ball.yVel = 200
+      ball.yVel = 300
     end
   end
+end
+
+function ball:reverse()
+  ball.xVel = -ball.xVel
+  ball.xVel = ball.xVel + 25
 end
