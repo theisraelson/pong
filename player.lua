@@ -10,6 +10,7 @@ end
 
 function player:update(dt)
   player:move(dt)
+  player:collision()
 end
 
 function player:draw()
@@ -23,7 +24,6 @@ function player:move(dt)
   if love.keyboard.isDown("down") then
     player.y = player.y + player.speed * dt
   end
-  player:collision()
 end
 
 function player:collision()
